@@ -6,7 +6,7 @@ on:
 
 jobs:
   Init:
-    runs-on:ubuntru:latest
+    runs-on:ubuntru-latest
     steps:
       - name: checkout code 
         uses: actions/checkout@v3
@@ -16,7 +16,7 @@ jobs:
           python-version:3.8
           
   Linting:
-    runs-on:ubuntu:latest
+    runs-on:ubuntu-latest
     steps:
       - name: cd function
         run: |
@@ -41,7 +41,7 @@ jobs:
       extra-isort-options: ""
       
   Build:
-    runs-on:ubuntu:latest
+    runs-on:ubuntu-latest
     steps:
       - name: Install libraries
         run: |
@@ -52,6 +52,11 @@ jobs:
         run: |
           cd function
           zip -r ../${{github.sha}}.zip
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: zipped-bundle
+          path: ${{github.sha}}.zip
         
         
       
