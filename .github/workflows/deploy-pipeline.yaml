@@ -1,0 +1,57 @@
+name: Creating a Release pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Init:
+    runs-on:ubuntru:latest
+    steps:
+      - name: checkout code 
+        uses: actions/checkout@v3
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version:3.8
+          
+  Linting:
+    runs-on:ubuntu:latest
+    steps:
+      - name: cd function
+        run: |
+          cd function
+      - name: Linting python code
+        uses: sunnysid3up/python-linter@master
+  - name: setup python
+    uses: ricardochaves/python-lint@v1.4.0
+    with:
+      python-root-list: "python_alelo tests"
+      use-pylint: false
+      use-pycodestyle: false
+      use-flake8: false
+      use-black: false
+      use-mypy: false
+      use-isort: false
+      extra-pylint-options: ""
+      extra-pycodestyle-options: ""
+      extra-flake8-options: ""
+      extra-black-options: ""
+      extra-mypy-options: ""
+      extra-isort-options: ""
+      
+  Build:
+    runs-on:ubuntu:latest
+    steps:
+      - name: Install libraries
+        run: |
+          cd function
+          python -m pip install --upgrade pip
+          if [-f requirements.txt ]; then pip install -f requirements.txt; fi
+      - name: create Zip bundle
+        run: |
+          cd function
+          zip -r ../${{github.sha}}.zip
+        
+        
+      
